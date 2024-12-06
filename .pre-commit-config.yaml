@@ -38,10 +38,10 @@ repos:
         # Not that problematic to run in parallel see Pre-commit
         # integration in the doc for details
         # require_serial: true
-        args: ["-rn", "-sn", "--rcfile=pylintrc", "--fail-on=I"]
+        args: ["-rn", "-sn", "--rcfile=.pylintrc", "--fail-on=I"]
         exclude: tests(/\w*)*/functional/|tests/input|tests(/\w*)*data/|doc/
       # We define an additional manual step to allow running pylint with a spelling
-      # checker in CI.
+      # checker in CI.sat
       - id: pylint
         alias: pylint-with-spelling
         name: pylint
@@ -52,7 +52,7 @@ repos:
           [
             "-rn",
             "-sn",
-            "--rcfile=pylintrc",
+            "--rcfile=.pylintrc",
             "--fail-on=I",
             "--spelling-dict=en",
             "--output-format=github",
@@ -68,7 +68,7 @@ repos:
       entry: pylint
       language: system
       types: [python]
-      args: ["-rn", "-sn", "--rcfile=pylintrc", "--fail-on=I"]
+      args: ["-rn", "-sn", "--rcfile=.pylintrc", "--fail-on=I"]
       exclude: tests(/\w*)*/functional/|tests/input|tests(/\w*)*data/|doc/
 
     # Pylint with spelling (manual stage)
@@ -81,7 +81,7 @@ repos:
         [
           "-rn",
           "-sn",
-          "--rcfile=pylintrc",
+          "--rcfile=.pylintrc",
           "--fail-on=I",
           "--spelling-dict=en",
           "--output-format=github",
