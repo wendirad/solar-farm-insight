@@ -40,31 +40,3 @@ repos:
         # require_serial: true
         args: ["-rn", "-sn", "--rcfile=.pylintrc", "--fail-on=I"]
         exclude: tests(/\w*)*/functional/|tests/input|tests(/\w*)*data/|doc/
-  - repo: local
-    hooks:
-    # Pylint without spelling
-    - id: pylint
-      name: pylint
-      entry: pylint
-      language: system
-      types: [python]
-      args: ["-rn", "-sn", "--rcfile=.pylintrc", "--fail-on=I"]
-      exclude: tests(/\w*)*/functional/|tests/input|tests(/\w*)*data/|doc/
-
-    # Pylint with spelling (manual stage)
-    - id: pylint-with-spelling
-      name: pylint-with-spelling
-      entry: pylint
-      language: system
-      types: [python]
-      args:
-        [
-          "-rn",
-          "-sn",
-          "--rcfile=.pylintrc",
-          "--fail-on=I",
-          "--spelling-dict=en",
-          "--output-format=github",
-        ]
-      exclude: tests(/\w*)*/functional/|tests/input|tests(/\w*)*data/|doc/
-      stages: [manual]
