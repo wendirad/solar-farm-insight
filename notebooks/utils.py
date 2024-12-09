@@ -5,6 +5,27 @@ Helper functions for the notebooks.
 import math
 
 import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+
+
+def report_null_columns(df):
+    """
+    Identifies columns causing NULL values and returns a report.
+
+    Args:
+        df (pd.DataFrame): Input DataFrame.
+
+    Returns:
+        dict: A dictionary with column names as keys
+              and count of NULL values as values.
+    """
+    null_report = {
+        col: int(df[col].isnull().sum())
+        for col in df.columns
+        if df[col].isnull().sum() > 0
+    }
+    return null_report
 
 
 def plot_statistical_summary(
@@ -69,4 +90,170 @@ def plot_statistical_summary(
 
     # Adjust layout
     plt.tight_layout(rect=[0, 0, 1, 0.95])  # Leave space for the legend
+    plt.show()
+
+
+def plot_histogram_with_percentiles(
+    data,
+    columns,
+    *,
+    percentiles=None,
+    bins=30,
+    ncols=2,
+    figsize=(15, 5),
+):
+    """
+    Plot histograms with percentile thresholds for multiple columns in a grid
+    layout.
+
+    Args:
+        data (pd.DataFrame): The dataset containing the columns.
+        columns (list): List of columns to visualize.
+        percentiles (list): Percentile thresholds to highlight
+                            (default: [10, 25, 50, 75, 90]).
+        ncols (int): Number of columns in the grid (default: 2).
+        figsize (tuple): Figure size as (width, height) for each subplot row.
+
+    Returns:
+        None
+    """
+    if percentiles is None:
+        percentiles = [10, 25, 50, 75, 90]
+
+    nrows = math.ceil(
+        len(columns) / ncols
+    )  # Calculate the number of rows needed
+    _, axes = plt.subplots(
+        nrows,
+        ncols,
+        figsize=(figsize[0], figsize[1] * nrows),
+        constrained_layout=True,
+    )
+    axes = axes.flatten()  # Flatten axes array to iterate over it easily
+
+    for i, column in enumerate(columns):
+        values = data[column]
+        percentile_values = np.percentile(values, percentiles)
+
+        axes[i].hist(
+            values, bins=bins, alpha=0.7, color="blue", edgecolor="black"
+        )
+        for p, val in zip(percentiles, percentile_values):
+            axes[i].axvline(
+                x=val,
+                color=plt.cm.viridis(
+                    np.random.rand()
+                ),  # pylint: disable=no-member
+                linestyle="--",
+                label=f"{p}th: {val:.2f}",
+            )
+
+        axes[i].set_title(f"Histogram of {column}")
+        axes[i].set_xlabel(column)
+        axes[i].set_ylabel("Frequency")
+        axes[i].legend()
+
+    # Hide unused subplots
+    for j in range(len(columns), len(axes)):
+        axes[j].axis("off")
+
+    plt.show()
+
+
+def plot_outliers(dataframe, columns, ncols=2, figsize=(15, 5)):
+    """
+    Draws box plots for multiple columns in a grid to visualize outliers.
+
+    Args:
+        dataframe (pd.DataFrame): The dataset containing the columns.
+        columns (list): List of column names to visualize with box plots.
+        ncols (int): Number of columns in the grid layout.
+        figsize (tuple): Figure size for the entire grid.
+
+    Returns:
+        None
+    """
+    nrows = math.ceil(len(columns) / ncols)  # Determine the number of rows
+    _, axes = plt.subplots(nrows, ncols, figsize=figsize)
+
+    axes = axes.flatten()
+
+    for idx, column in enumerate(columns):
+        sns.boxplot(data=dataframe[column], ax=axes[idx])
+        axes[idx].set_title(f"Box Plot of {column}")
+
+    # Hide any unused subplots
+    for idx in range(len(columns), len(axes)):
+        axes[idx].axis("off")
+
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_entries(data, columns):
+    """
+    Plot stacked bar charts showing the percentage distribution of negative,
+    zero, and positive values for multiple columns.
+
+    Args:
+        data (pd.DataFrame): The dataset.
+        columns (list): List of columns to check for data distribution.
+
+    Returns:
+        None
+    """
+    total_counts = [len(data[col]) for col in columns]
+    negative_counts = [np.sum(data[col] < 0) for col in columns]
+    zero_counts = [np.sum(data[col] == 0) for col in columns]
+    positive_counts = [np.sum(data[col] > 0) for col in columns]
+
+    negative_percent = [
+        count / total * 100
+        for count, total in zip(negative_counts, total_counts)
+    ]
+    zero_percent = [
+        count / total * 100 for count, total in zip(zero_counts, total_counts)
+    ]
+    positive_percent = [
+        count / total * 100
+        for count, total in zip(positive_counts, total_counts)
+    ]
+
+    bar_width = 0.6
+    x = np.arange(len(columns))
+
+    plt.figure(figsize=(12, 8))
+    plt.bar(
+        x,
+        negative_percent,
+        color="red",
+        label="Negative Values",
+        width=bar_width,
+    )
+    plt.bar(
+        x,
+        zero_percent,
+        bottom=negative_percent,
+        color="green",
+        label="Zero Values",
+        width=bar_width,
+    )
+    plt.bar(
+        x,
+        positive_percent,
+        bottom=np.array(negative_percent) + np.array(zero_percent),
+        color="blue",
+        label="Positive Values",
+        width=bar_width,
+    )
+
+    plt.xticks(x, columns, rotation=45)
+    plt.title(
+        "Data Distribution: Negative, Zero, and Positive Values (Percentage)"
+    )
+    plt.xlabel("Columns")
+    plt.ylabel("Percentage")
+    plt.legend()
+    plt.grid(axis="y", linestyle="--", alpha=0.7)
+    plt.tight_layout()
     plt.show()
