@@ -439,6 +439,7 @@ disable=raw-checker-failed,
         use-symbolic-message-instead,
         use-implicit-booleaness-not-comparison-to-string,
         use-implicit-booleaness-not-comparison-to-zero,
+        too-many-arguments,
         C0301,  # Line too long (handled by Black)
         W0311,  # Bad indentation (aligns with EditorConfig)
         W0611,
