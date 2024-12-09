@@ -3,6 +3,7 @@ A Dashboard for Solar Farm Insight
 """
 
 import streamlit as st
+from utils import load_data  # pylint: disable=import-error
 
 # Page configuration
 st.set_page_config(page_title="Solar Dashboard", layout="wide")
@@ -45,6 +46,39 @@ with col2:
     )
     run_analysis = st.button("Run Analysis", use_container_width=True)
     st.button("Reset Dashboard", use_container_width=True)
+
+if files:
+    names = load_data(files)
+    dataset = st.selectbox("Select a dataset:", names.keys())
+    df = names[dataset]
+
+    if dataset:
+        st.markdown(
+            f"<h3 style='color: #FF5722;'>{dataset}</h3>",
+            unsafe_allow_html=True,
+        )
+        st.write(df)
+
+    if run_analysis:
+        st.markdown(
+            "<h3 style='color: #2196F3;'>Summary</h3>", unsafe_allow_html=True
+        )
+        st.write(df.describe(), use_container_width=True)
+
+        st.markdown(
+            "<h3 style='color: #2196F3;'>Data Visualization</h3>",
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            "<h3 style='color: #2196F3;'>Data Visualization</h3>",
+            unsafe_allow_html=True,
+        )
+        x = st.selectbox("Select X:", df.columns)
+
+        st.markdown(
+            "<h3 style='color: #2196F3;'>Insights</h3>", unsafe_allow_html=True
+        )
+
 st.markdown("<hr>", unsafe_allow_html=True)
 st.markdown(
     (
