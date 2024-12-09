@@ -6,6 +6,7 @@ import math
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import seaborn as sns
 from statsmodels.tsa.seasonal import seasonal_decompose
 
@@ -390,4 +391,47 @@ def plot_cleaning_impact(
         axes[i, 1].grid()
 
     plt.suptitle("Impact of Cleaning on Sensor Readings", fontsize=16)
+    plt.show()
+
+
+def plot_correlation_heatmap(data, columns, *, figsize=(8, 6)):
+    """
+    Plot a heatmap of correlations for RH, temperature, and solar radiation.
+
+    Args:
+        data (pd.DataFrame): The dataset containing relevant columns.
+
+    Returns:
+        None
+    """
+
+    corr_matrix = data[columns].corr()
+    plt.figure(figsize=figsize)
+    sns.heatmap(corr_matrix, annot=True, cmap="coolwarm", fmt=".2f", cbar=True)
+    plt.title("Correlation Heatmap: " + ", ".join(columns))
+    plt.show()
+
+
+def plot_scatter_matrix(data, columns, resample_period="D", figsize=(10, 10)):
+    """
+    Plot a scatter matrix for specified columns after resampling data to the
+    given period.
+
+    Args:
+        data (pd.DataFrame): The dataset containing the columns.
+        columns (list): List of column names to include in the scatter matrix.
+        resample_period (str): The resampling period (default: 'D' for daily).
+        figsize (tuple): Figure size for the scatter matrix (default:(10, 10)).
+
+    Returns:
+        None
+    """
+    resampled_data = data.resample(resample_period).mean()
+
+    pd.plotting.scatter_matrix(
+        resampled_data[columns], figsize=figsize, alpha=0.7
+    )
+    plt.suptitle(
+        f"Scatter Matrix for {resample_period.capitalize()} Data", fontsize=16
+    )
     plt.show()
