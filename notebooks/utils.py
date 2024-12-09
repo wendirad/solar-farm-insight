@@ -575,8 +575,8 @@ def plot_histograms(data, variables, bins=30, figsize=(15, 10)):
         None
     """
     num_vars = len(variables)
-    ncols = 3  # Number of columns for the grid layout
-    nrows = -(-num_vars // ncols)  # Calculate rows needed (ceiling division)
+    ncols = 3
+    nrows = -(-num_vars // ncols)
 
     plt.figure(figsize=figsize)
     for i, var in enumerate(variables, 1):
@@ -588,3 +588,29 @@ def plot_histograms(data, variables, bins=30, figsize=(15, 10)):
 
     plt.tight_layout()
     plt.show()
+
+
+def calculate_z_scores(data, columns, threshold=3):
+    """
+    Calculate Z-scores for the specified columns and flag data points
+    significantly
+    different from the mean.
+
+    Args:
+        data (pd.DataFrame): The dataset containing the variables.
+        columns (list): List of column names to calculate Z-scores for.
+        threshold (float): Z-score threshold to flag significant deviations
+                            (default: 3).
+
+    Returns:
+        pd.DataFrame: DataFrame with additional columns for Z-scores and flags.
+    """
+    z_score_results = data.copy()
+
+    for column in columns:
+        z_scores = (data[column] - data[column].mean()) / data[column].std()
+        z_score_results[f"{column}_zscore"] = z_scores
+
+        z_score_results[f"{column}_flagged"] = np.abs(z_scores) > threshold
+
+    return z_score_results
