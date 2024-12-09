@@ -558,3 +558,33 @@ def plot_boxplot_rh_categories(data):
         plt.ylabel(var)
     plt.tight_layout()
     plt.show()
+
+
+def plot_histograms(data, variables, bins=30, figsize=(15, 10)):
+    """
+    Create histograms for the specified variables to visualize frequency
+    distributions.
+
+    Args:
+        data (pd.DataFrame): The dataset containing the variables.
+        variables (list): List of column names to create histograms for.
+        bins (int): Number of bins for the histograms (default: 30).
+        figsize (tuple): Size of the figure (default: (15, 10)).
+
+    Returns:
+        None
+    """
+    num_vars = len(variables)
+    ncols = 3  # Number of columns for the grid layout
+    nrows = -(-num_vars // ncols)  # Calculate rows needed (ceiling division)
+
+    plt.figure(figsize=figsize)
+    for i, var in enumerate(variables, 1):
+        plt.subplot(nrows, ncols, i)
+        data[var].dropna().hist(bins=bins, alpha=0.7, edgecolor="black")
+        plt.title(f"Histogram of {var}")
+        plt.xlabel(var)
+        plt.ylabel("Frequency")
+
+    plt.tight_layout()
+    plt.show()
