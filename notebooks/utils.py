@@ -450,43 +450,32 @@ def plot_windrose_distribution(data):
     Returns:
         None
     """
-    # Bin directions for variability
+
     bins = np.arange(0, 361, 10)
     data["WD_bin"] = pd.cut(
         data["WD"], bins=bins, labels=bins[:-1], include_lowest=True
     )
 
-    # Calculate average WDstdev per bin
     avg_wdstdev = data.groupby("WD_bin")["WDstdev"].mean().reset_index()
     avg_wdstdev["WD_bin"] = avg_wdstdev["WD_bin"].astype(float)
 
-    # Create the figure for the grid layout
     fig = plt.figure(figsize=(18, 6))
 
-    # Wind Speed Distribution
-    ax1 = WindroseAxes(
-        fig, [0.05, 0.1, 0.25, 0.8]
-    )  # Custom position in the grid
+    ax1 = WindroseAxes(fig, [0.05, 0.1, 0.25, 0.8])
     fig.add_axes(ax1)
     ax1.bar(
         data["WD"], data["WS"], normed=True, opening=0.8, edgecolor="white"
     )
     ax1.set_title("Wind Speed Distribution")
 
-    # Wind Gust Speed Distribution
-    ax2 = WindroseAxes(
-        fig, [0.35, 0.1, 0.25, 0.8]
-    )  # Custom position in the grid
+    ax2 = WindroseAxes(fig, [0.35, 0.1, 0.25, 0.8])
     fig.add_axes(ax2)
     ax2.bar(
         data["WD"], data["WSgust"], normed=True, opening=0.8, edgecolor="white"
     )
     ax2.set_title("Wind Gust Speed Distribution")
 
-    # Wind Direction Variability Distribution
-    ax3 = WindroseAxes(
-        fig, [0.65, 0.1, 0.25, 0.8]
-    )  # Custom position in the grid
+    ax3 = WindroseAxes(fig, [0.65, 0.1, 0.25, 0.8])
     fig.add_axes(ax3)
     ax3.bar(
         avg_wdstdev["WD_bin"],
@@ -497,4 +486,75 @@ def plot_windrose_distribution(data):
     )
     ax3.set_title("Wind Direction Variability Distribution")
 
+    plt.show()
+
+
+def analyze_rh_impact(data, group_period="D", *, figsize=(15, 10)):
+    """
+    Analyze the impact of relative humidity (RH) on temperature and solar
+    radiation by grouping data into periods.
+
+    Args:
+        data (pd.DataFrame): The dataset containing RH, temperature, and solar
+                                radiation columns with a DateTime index.
+        group_period (str): The period for grouping ('D' for daily, 'W' for
+                                weekly, 'M' for monthly).
+
+    Returns:
+        None
+    """
+
+    numeric_data = data.select_dtypes(include=["number"])
+
+    grouped_data = numeric_data.resample(group_period).mean()
+
+    variables = ["TModA", "TModB", "GHI", "DNI", "DHI"]
+
+    plt.figure(figsize=figsize)
+    for i, var in enumerate(variables, 1):
+        if var not in grouped_data.columns:
+            continue
+
+        plt.subplot(2, 3, i)
+        sns.scatterplot(data=grouped_data, x="RH", y=var, alpha=0.7)
+        sns.regplot(
+            data=grouped_data,
+            x="RH",
+            y=var,
+            scatter=False,
+            color="red",
+            line_kws={"linewidth": 2},
+        )
+        plt.title(f"{var} vs RH ({group_period} Mean)")
+        plt.xlabel("Relative Humidity (RH)")
+        plt.ylabel(var)
+
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_boxplot_rh_categories(data):
+    """
+    Plot box plots of temperature and solar radiation by RH categories.
+
+    Args:
+        data (pd.DataFrame): The dataset containing RH, temperature, and solar
+                              radiation columns.
+
+    Returns:
+        None
+    """
+    data["RH_category"] = pd.cut(
+        data["RH"], bins=[0, 30, 60, 100], labels=["Low", "Medium", "High"]
+    )
+
+    variables = ["TModA", "TModB", "GHI", "DNI", "DHI"]
+    plt.figure(figsize=(15, 10))
+    for i, var in enumerate(variables, 1):
+        plt.subplot(2, 3, i)
+        sns.boxplot(data=data, x="RH_category", y=var)
+        plt.title(f"{var} by RH Category")
+        plt.xlabel("RH Category")
+        plt.ylabel(var)
+    plt.tight_layout()
     plt.show()
