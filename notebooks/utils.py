@@ -645,3 +645,127 @@ def plot_bubble_chart(
     plt.ylabel(y_var)
     plt.grid(True, linestyle="--", alpha=0.7)
     plt.show()
+
+
+def aggregate_solar_data(df, frequency="M"):
+    """
+    Aggregates GHI, DNI, and DHI data by specified frequency
+    (monthly or yearly).
+
+    Parameters:
+    - df (DataFrame): Input DataFrame with a DateTime index and columns
+                        ['GHI', 'DNI', 'DHI'].
+    - frequency (str): Aggregation frequency
+                        ('M' for monthly, 'Y' for yearly).
+
+    Returns:
+    - DataFrame: Aggregated DataFrame with averages for GHI, DNI, and DHI.
+    """
+    if frequency not in ["M", "Y"]:
+        raise ValueError("Frequency must be 'M' (monthly) or 'Y' (yearly).")
+
+    # Resample data based on the specified frequency and compute averages
+    aggregated = df[["GHI", "DNI", "DHI"]].resample(frequency).mean()
+
+    return aggregated
+
+
+def clip_columns_to_range(df, column_ranges):
+    """
+    Clips the values of specified columns in the DataFrame to their real-world
+    min and max.
+
+    Parameters:
+    - df (DataFrame): Input DataFrame.
+    - column_ranges (dict): Dictionary where keys are column names, and values
+                            are tuples (min, max).
+
+    Returns:
+    - DataFrame: DataFrame with values clipped to specified ranges.
+    """
+    for column, (min_val, max_val) in column_ranges.items():
+        if column in df.columns:
+            df[column] = df[column].clip(lower=min_val, upper=max_val)
+    return df
+
+
+def replace_outliers_with_mean_or_median(df, method="median", threshold=3):
+    """
+    Replaces outliers in the DataFrame with the column median or mean.
+
+    Parameters:
+    - df (DataFrame): Input DataFrame.
+    - method (str): Method to replace outliers, either 'median' or 'mean'.
+                    Default is 'median'.
+    - threshold (float): Z-score threshold to identify outliers. Default is 3.
+
+    Returns:
+    - DataFrame: A DataFrame with outliers replaced.
+    """
+    df_cleaned = df.copy()
+
+    for col in df_cleaned.select_dtypes(include=np.number).columns:
+        # Calculate Z-scores
+        col_mean = df_cleaned[col].mean()
+        col_std = df_cleaned[col].std()
+        z_scores = (df_cleaned[col] - col_mean) / col_std
+
+        # Identify outliers
+        outliers = z_scores.abs() > threshold
+
+        # Replace outliers with mean or median
+        if method == "mean":
+            replacement_value = col_mean
+        elif method == "median":
+            replacement_value = df_cleaned[col].median()
+        else:
+            raise ValueError("Method must be either 'median' or 'mean'")
+
+        df_cleaned.loc[outliers, col] = replacement_value
+
+    return df_cleaned
+
+
+def replace_neg_with_zero(df):
+    """
+    Replaces all negative values in the DataFrame with zero.
+
+    Parameters:
+    - df (DataFrame): The input DataFrame with numeric columns.
+
+    Returns:
+    - DataFrame: A DataFrame where all negative values have been
+                replaced with zero.
+    """
+    # Replace negative values with zero
+    df_cleaned = df.where(df >= 0, 0)
+    return df_cleaned
+
+
+def check_negative_values_nighttime(df, nighttime_start=18, nighttime_end=6):
+    """
+    Checks if negative values in a DataFrame occur during nighttime.
+
+    Parameters:
+    - df (DataFrame): The input DataFrame with a Timestamp
+                        index and numeric columns.
+    - nighttime_start (int): The hour when nighttime starts
+                            (default is 18, 6:00 PM).
+    - nighttime_end (int): The hour when nighttime ends
+                            (default is 6, 6:00 AM).
+
+    Returns:
+    - DataFrame: A DataFrame containing rows with negative values, their hour,
+      and a boolean indicating if they occur during nighttime.
+    """
+    negative_values = df[(df < 0).any(axis=1)].copy()
+
+    negative_values["Hour"] = negative_values.index.hour
+
+    is_nighttime = (negative_values["Hour"] >= nighttime_start) | (
+        negative_values["Hour"] < nighttime_end
+    )
+
+    negative_values["Nighttime"] = is_nighttime
+
+    return all(negative_values[["Hour", "Nighttime"] + list(df.columns)])

@@ -145,3 +145,12 @@ Benin exhibits higher variability, especially in the Western and Southwestern di
 **Wind Speed (WS)**: Larger bubble sizes (high wind speed) seem scattered throughout but tend to appear more in moderate GHI and Tamb regions.
 
 **Relative Humidity (RH)**: Color gradients show that higher RH (yellow) predominantly exists in low GHI and moderate Tamb regions.
+
+
+## **Conclusion**
+
+The analysis of yearly solar irradiance data reveals that Benin consistently exhibits the highest Global Horizontal Irradiance (GHI) across both years, highlighting its strong potential for solar energy generation. Togo follows closely, with comparable GHI values that also indicate suitability for solar deployment. In contrast, Sierra Leone shows lower GHI values, suggesting relatively less solar resource availability.
+
+Direct Normal Irradiance (DNI) further reinforces Benin's advantage, with consistently high values compared to Sierra Leone, which has the lowest DNI readings. Togo shows significant variability in DNI between 2021 and 2022, reflecting potential fluctuations in direct solar radiation. Diffuse Horizontal Irradiance (DHI) trends reveal that Sierra Leone experiences higher diffuse radiation in 2022, likely due to atmospheric conditions such as higher humidity or cloud cover, which could impact the efficiency of solar systems reliant on direct sunlight.
+
+Overall, **Benin** emerges as the most favorable location for solar farm deployment due to its consistently high GHI and stable DNI, while Togo remains a strong contender. Sierra Leone, though viable, may require a tailored approach to account for its lower GHI and higher diffuse radiation conditions.
