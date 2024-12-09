@@ -41,6 +41,7 @@ def plot_statistical_summary(
     xlabel="Time",
     ylabel="Value",
     title="Resampled Data",
+    ncols=2,
 ):
     """
     Plots resampled data for each aggregation method in a grid
@@ -61,7 +62,6 @@ def plot_statistical_summary(
         None
     """
 
-    ncols = 2
     nrows = math.ceil(len(aggregation_methods) / ncols)
 
     fig, axes = plt.subplots(
@@ -129,6 +129,9 @@ def plot_histogram_with_percentiles(
     )
     axes = axes.flatten()
 
+    # List to hold the labels for the common legend
+    handles, labels = [], []
+
     for i, column in enumerate(columns):
         values = data[column]
         percentile_values = np.percentile(values, percentiles)
@@ -137,7 +140,7 @@ def plot_histogram_with_percentiles(
             values, bins=bins, alpha=0.7, color="blue", edgecolor="black"
         )
         for p, val in zip(percentiles, percentile_values):
-            axes[i].axvline(
+            line = axes[i].axvline(
                 x=val,
                 color=plt.cm.viridis(
                     np.random.rand()
@@ -145,43 +148,25 @@ def plot_histogram_with_percentiles(
                 linestyle="--",
                 label=f"{p}th: {val:.2f}",
             )
+            # Collect handle and label for the legend
+            handles.append(line)
+            labels.append(f"{p}th: {val:.2f}")
 
         axes[i].set_title(f"Histogram of {column}")
         axes[i].set_xlabel(column)
         axes[i].set_ylabel("Frequency")
-        axes[i].legend()
 
     for j in range(len(columns), len(axes)):
         axes[j].axis("off")
 
-    plt.show()
+    plt.figlegend(
+        handles,
+        labels,
+        loc="upper center",
+        ncol=len(percentiles),
+        bbox_to_anchor=(0.5, -0.05),
+    )
 
-
-def plot_outliers(dataframe, columns, ncols=2, figsize=(15, 5)):
-    """
-    Draws box plots for multiple columns in a grid to visualize outliers.
-
-    Args:
-        dataframe (pd.DataFrame): The dataset containing the columns.
-        columns (list): List of column names to visualize with box plots.
-        ncols (int): Number of columns in the grid layout.
-        figsize (tuple): Figure size for the entire grid.
-
-    Returns:
-        None
-    """
-    nrows = math.ceil(len(columns) / ncols)
-    _, axes = plt.subplots(nrows, ncols, figsize=figsize)
-
-    axes = axes.flatten()
-
-    for idx, column in enumerate(columns):
-        sns.boxplot(data=dataframe[column], ax=axes[idx])
-        axes[idx].set_title(f"Box Plot of {column}")
-    for idx in range(len(columns), len(axes)):
-        axes[idx].axis("off")
-
-    plt.tight_layout()
     plt.show()
 
 
