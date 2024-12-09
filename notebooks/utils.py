@@ -614,3 +614,49 @@ def calculate_z_scores(data, columns, threshold=3):
         z_score_results[f"{column}_flagged"] = np.abs(z_scores) > threshold
 
     return z_score_results
+
+
+def plot_bubble_chart(
+    data, x_var, y_var, size_var, color_var=None, figsize=(10, 7), alpha=0.6
+):
+    """
+    Plot a bubble chart to explore relationships between variables.
+
+    Args:
+        data (pd.DataFrame): The dataset containing the variables.
+        x_var (str): Column name for the X-axis variable.
+        y_var (str): Column name for the Y-axis variable.
+        size_var (str): Column name for the bubble size variable.
+        color_var (str): Column name for bubble color (optional).
+        figsize (tuple): Size of the figure (default: (10, 7)).
+        alpha (float): Transparency level for bubbles (default: 0.6).
+
+    Returns:
+        None
+    """
+    plt.figure(figsize=figsize)
+
+    bubble_sizes = (
+        (data[size_var] - data[size_var].min())
+        / (data[size_var].max() - data[size_var].min())
+        * 1000
+    )
+
+    scatter = plt.scatter(
+        data[x_var],
+        data[y_var],
+        s=bubble_sizes,
+        c=data[color_var] if color_var else None,
+        cmap="viridis" if color_var else None,
+        alpha=alpha,
+        edgecolor="black",
+    )
+
+    if color_var:
+        plt.colorbar(scatter, label=color_var)
+
+    plt.title(f"{y_var} vs {x_var} with Bubble Size Representing {size_var}")
+    plt.xlabel(x_var)
+    plt.ylabel(y_var)
+    plt.grid(True, linestyle="--", alpha=0.7)
+    plt.show()

@@ -440,6 +440,7 @@ disable=raw-checker-failed,
         use-implicit-booleaness-not-comparison-to-string,
         use-implicit-booleaness-not-comparison-to-zero,
         too-many-arguments,
+        too-many-positional-arguments,
         no-member,
         C0301,  # Line too long (handled by Black)
         W0311,  # Bad indentation (aligns with EditorConfig)
