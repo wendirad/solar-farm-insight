@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from statsmodels.tsa.seasonal import seasonal_decompose
+from windrose import WindroseAxes
 
 
 def report_null_columns(df):
@@ -434,4 +435,66 @@ def plot_scatter_matrix(data, columns, resample_period="D", figsize=(10, 10)):
     plt.suptitle(
         f"Scatter Matrix for {resample_period.capitalize()} Data", fontsize=16
     )
+    plt.show()
+
+
+def plot_windrose_distribution(data):
+    """
+    Plot windrose diagrams for wind speed, wind gust speed, and wind
+    direction variability.
+
+    Args:
+        data (pd.DataFrame): The dataset containing columns 'WD', 'WS',
+                             WSgust', and 'WDstdev'.
+
+    Returns:
+        None
+    """
+    # Bin directions for variability
+    bins = np.arange(0, 361, 10)
+    data["WD_bin"] = pd.cut(
+        data["WD"], bins=bins, labels=bins[:-1], include_lowest=True
+    )
+
+    # Calculate average WDstdev per bin
+    avg_wdstdev = data.groupby("WD_bin")["WDstdev"].mean().reset_index()
+    avg_wdstdev["WD_bin"] = avg_wdstdev["WD_bin"].astype(float)
+
+    # Create the figure for the grid layout
+    fig = plt.figure(figsize=(18, 6))
+
+    # Wind Speed Distribution
+    ax1 = WindroseAxes(
+        fig, [0.05, 0.1, 0.25, 0.8]
+    )  # Custom position in the grid
+    fig.add_axes(ax1)
+    ax1.bar(
+        data["WD"], data["WS"], normed=True, opening=0.8, edgecolor="white"
+    )
+    ax1.set_title("Wind Speed Distribution")
+
+    # Wind Gust Speed Distribution
+    ax2 = WindroseAxes(
+        fig, [0.35, 0.1, 0.25, 0.8]
+    )  # Custom position in the grid
+    fig.add_axes(ax2)
+    ax2.bar(
+        data["WD"], data["WSgust"], normed=True, opening=0.8, edgecolor="white"
+    )
+    ax2.set_title("Wind Gust Speed Distribution")
+
+    # Wind Direction Variability Distribution
+    ax3 = WindroseAxes(
+        fig, [0.65, 0.1, 0.25, 0.8]
+    )  # Custom position in the grid
+    fig.add_axes(ax3)
+    ax3.bar(
+        avg_wdstdev["WD_bin"],
+        avg_wdstdev["WDstdev"],
+        normed=False,
+        opening=0.8,
+        edgecolor="white",
+    )
+    ax3.set_title("Wind Direction Variability Distribution")
+
     plt.show()
