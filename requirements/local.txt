@@ -1,7 +1,9 @@
 -r tests.txt
 
-black==24.10.0
+black[jupyter]==24.10.0
 flake8==7.1.1
 isort==5.13.2
 pre_commit==4.0.1
 pylint==3.3.2
+statsmodels==0.14.4
+scipy==1.14.1
