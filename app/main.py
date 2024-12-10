@@ -29,9 +29,19 @@ def run() -> None:
         icon=":material/database:",
     )
 
+    correlation_analysis = st.Page(
+        "pages/correlation_analysis.py",
+        title="Correlation Analysis",
+        icon=":material/insights:",
+    )
     pg = st.navigation(
         {
-            "": [dashboard, summary_page, data_quality_check],
+            "": [
+                dashboard,
+                summary_page,
+                data_quality_check,
+                correlation_analysis,
+            ],
         }
     )
 
@@ -63,7 +73,7 @@ def run() -> None:
         unsafe_allow_html=True,
     )
 
-    if "data" not in st.session_state:
+    if pg.title != "Dashboard" and "data" not in st.session_state:
         st.write(
             (
                 "<h2 style='text-align: center;color: tomato;margin-top:"

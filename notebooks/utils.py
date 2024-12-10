@@ -397,6 +397,8 @@ def plot_correlation_heatmap(data, columns, *, figsize=(8, 6)):
     plt.title("Correlation Heatmap: " + ", ".join(columns))
     plt.show()
 
+    return plt.gcf()
+
 
 def plot_scatter_matrix(data, columns, resample_period="D", figsize=(10, 10)):
     """
@@ -421,6 +423,8 @@ def plot_scatter_matrix(data, columns, resample_period="D", figsize=(10, 10)):
         f"Scatter Matrix for {resample_period.capitalize()} Data", fontsize=16
     )
     plt.show()
+
+    return plt.gcf()
 
 
 def plot_windrose_distribution(data):
