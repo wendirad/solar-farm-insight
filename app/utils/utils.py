@@ -29,5 +29,7 @@ def load_data(files) -> dict:
     names = {}
     for file in files:
         name = process_name(file.name)
-        names[name] = pd.read_csv(file)
+        names[name] = pd.read_csv(
+            file, parse_dates=["Timestamp"], index_col="Timestamp"
+        )
     return names

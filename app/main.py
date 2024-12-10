@@ -10,6 +10,7 @@ def run() -> None:
     """
     A function to run the main application
     """
+    st.set_page_config(layout="wide")
 
     dashboard = st.Page(
         "pages/dashboard.py",
