@@ -170,7 +170,7 @@ def plot_histogram_with_percentiles(
     plt.show()
 
 
-def plot_entries(data, columns, figsize=(12, 8)):
+def plot_entries(data, columns, figsize=(12, 8), bar_width=0.1):
     """
     Plot stacked bar charts showing the percentage distribution of negative,
     zero, and positive values for multiple columns.
@@ -199,7 +199,6 @@ def plot_entries(data, columns, figsize=(12, 8)):
         for count, total in zip(positive_counts, total_counts)
     ]
 
-    bar_width = 0.6
     x = np.arange(len(columns))
 
     plt.figure(figsize=figsize)
@@ -229,14 +228,15 @@ def plot_entries(data, columns, figsize=(12, 8)):
 
     plt.xticks(x, columns, rotation=45)
     plt.title(
-        "Data Distribution: Negative, Zero, and Positive Values (Percentage)"
+        "Data Distribution: Negative, Zero, and Positive Values (Percentage)",
     )
-    plt.xlabel("Columns")
-    plt.ylabel("Percentage")
-    plt.legend()
+    plt.ylabel("Percentage", fontdict={"size": 6})
+    plt.legend(loc="upper left", bbox_to_anchor=(1, 1), prop={"size": 5})
     plt.grid(axis="y", linestyle="--", alpha=0.7)
     plt.tight_layout()
     plt.show()
+
+    return plt.gcf()
 
 
 def plot_trends(

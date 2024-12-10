@@ -5,15 +5,7 @@ A Summary Statistics Page
 import pandas as pd
 import streamlit as st
 
-if "data" not in st.session_state:
-    st.write(
-        (
-            "<h2 style='text-align: center;color: tomato;margin-top: 10rem;'>"
-            "Please Upload the dataset first</h2>"
-        ),
-        unsafe_allow_html=True,
-    )
-else:
+if "data" in st.session_state:
     name: str = st.session_state.data[0]
     dataset: pd.DataFrame = st.session_state.data[1]
 

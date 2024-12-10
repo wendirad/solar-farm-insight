@@ -23,10 +23,15 @@ def run() -> None:
         title="Summary Statistics",
         icon=":material/analytics:",
     )
+    data_quality_check = st.Page(
+        "pages/data_quality_check.py",
+        title="Data Quality Check",
+        icon=":material/database:",
+    )
 
     pg = st.navigation(
         {
-            "": [dashboard, summary_page],
+            "": [dashboard, summary_page, data_quality_check],
         }
     )
 
@@ -58,6 +63,14 @@ def run() -> None:
         unsafe_allow_html=True,
     )
 
+    if "data" not in st.session_state:
+        st.write(
+            (
+                "<h2 style='text-align: center;color: tomato;margin-top:"
+                " 10rem;'>Please Upload the dataset first</h2>"
+            ),
+            unsafe_allow_html=True,
+        )
     pg.run()
 
 
