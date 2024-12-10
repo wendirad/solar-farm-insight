@@ -2,6 +2,7 @@
 
 Exploratory Data Analysis (`EDA`) for MoonLight Energy Solutions to identify optimal locations for solar farm installations, focusing on sustainability and operational efficiency through data-driven insights.
 
+![sf](https://images.pexels.com/photos/15751120/pexels-photo-15751120/free-photo-of-field-of-a-solar-panels.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1)
 
 ## **Dataset Overview**
 
@@ -35,6 +36,9 @@ Performing Exploratory Data Analysis (EDA) analysis to understand the dataset an
 
 ### **Summary Statistics**
 
+
+![sa](https://github.com/wendirad/solar-farm-insight/blob/main/images/summary_analytics.png?raw=true)
+
 **Central Tendency and Distribution** The mean and median values for most variables, such as temperature (`Tamb`) and relative humidity (RH), are relatively close, indicating a fairly symmetrical distribution. Solar irradiance metrics (`GHI`, `DNI`, `DHI`) show significant differences between the mean and higher percentile values (75th and max), highlighting the presence of peaks during the observation period.
 
 **Variability and Range** High standard deviations for irradiance metrics (`GHI`, `DNI`, `DHI`) and module outputs (`ModA`, `ModB`) indicate large fluctuations, which may be due to seasonal changes, time of day, or weather conditions. Wind-related variables, including wind speed (`WS`), wind gusts (`WSgust`), and wind direction (`WD`), also show notable variability, though less pronounced compared to solar metrics. Barometric pressure (`BP`) has relatively low variability, suggesting consistent atmospheric pressure in these locations.
@@ -42,6 +46,10 @@ Performing Exploratory Data Analysis (EDA) analysis to understand the dataset an
 **Outliers and Potential Anomalies** Negative values in solar irradiance metrics (e.g., `GHI`, `DNI`, `DHI`) likely represent nighttime readings or potential sensor errors that need to be accounted for during analysis. Precipitation and cleaning metrics show very low means and counts of significant values, indicating rare occurrences. Extreme max values for wind gusts and solar parameters could signal sporadic weather events or measurement anomalies that might require further investigation.
 
 ### **Data Quality Check**
+
+![hp](https://github.com/wendirad/solar-farm-insight/blob/main/images/hist_per.png?raw=true)
+![ot](https://github.com/wendirad/solar-farm-insight/blob/main/images/outliers.png?raw=true)
+![ds](https://github.com/wendirad/solar-farm-insight/blob/main/images/distribution.png?raw=true)
 
 For all three locations—Benin, Sierra Leone, and Togo—the following observations were made from the analysis:
 
@@ -63,6 +71,9 @@ All distributions exhibit positive skewness, with the majority of readings clust
 
 ### **Time Series Analysis**
 
+![td](https://github.com/wendirad/solar-farm-insight/blob/main/images/trends.png?raw=true)
+![sd](https://github.com/wendirad/solar-farm-insight/blob/main/images/seasonal_decomp.png?raw=true)
+
 #### **Monthly Patterns of `GHI`, `DNI`, `DHI`, and `Tamb`**
 **Benin:** Solar irradiance (`GHI`, `DNI`, `DHI`) follows a clear seasonal pattern, peaking during specific months (likely dry seasons) and declining in others (wet/cloudy seasons). Temperature (`Tamb`) remains relatively stable but shows slight seasonal variation, aligning with expected climatic patterns.
 
@@ -81,6 +92,9 @@ All distributions exhibit positive skewness, with the majority of readings clust
 
 #### **Impact of Cleaning on Sensor Readings (`ModA`, `ModB`)**
 
+<img src="https://github.com/wendirad/solar-farm-insight/blob/main/images/cleaning_effect.png?raw=true" />
+
+
 **Boxplots Analysis:** Sensor readings post-cleaning show reduced variability and fewer extreme outliers, indicating improved data quality. The mean readings for `ModA` `and` ModB increase significantly after cleaning, suggesting that dust or debris negatively affected sensor performance before cleaning.
 
 **Trend Plots:** The time series trends of `ModA` `and` ModB clearly differentiate the periods before and after cleaning. Post-cleaning periods show more consistent and elevated readings, reinforcing the impact of cleaning on sensor performance.
@@ -96,6 +110,18 @@ All distributions exhibit positive skewness, with the majority of readings clust
 
 ### **Correlation Analysis**
 
+<table>
+<tr>
+   <td>
+      <img src="https://github.com/wendirad/solar-farm-insight/blob/main/images/corelation.png?raw=true">
+   </td>
+   <td>
+      <img src="https://github.com/wendirad/solar-farm-insight/blob/main/images/scatter.png?raw=true">
+   </td>
+</tr>
+</table>
+
+
 **Solar Irradiance Components (`GHI`, `DNI`, `DHI`):** `GHI` is highly correlated with `ModA` `and` ModB (correlation coefficient ~0.99), confirming that these modules are primarily driven by global horizontal irradiance.  `DNI` has a slightly weaker correlation (~0.88) with `ModA` `and` ModB, suggesting that direct irradiance is not the sole determinant of sensor output. `DHI` shows the lowest correlation among solar components (~0.85), indicating a reduced influence of diffuse radiation compared to direct and global irradiance.
 
 **Temperature Relationships (`Tamb`, T`ModA`, `TModB`):** Moderate correlations (~0.55-0.65) between solar components (`GHI`, `DNI`, `DHI`) and `Tamb`/TMod metrics. This indicates that temperature increases alongside irradiance but is not a direct driver of the observed variation. The strong correlation between T`ModA` `and` TModB (~0.99) reflects their similar measurement functionality and shared response to environmental conditions.
@@ -105,6 +131,8 @@ All distributions exhibit positive skewness, with the majority of readings clust
 **Scatter Patterns:** Linear relationships are prominent between `GHI` and `ModA`/`ModB`, affirming that sensor readings scale proportionally with global horizontal irradiance.Non-linear trends between `Tamb` and solar components indicate external factors influencing temperature, such as seasonal cycles. Random scatter between wind metrics and irradiance supports the lack of a direct relationship.
 
 ### **Wind Analysis**
+
+![wr](https://github.com/wendirad/solar-farm-insight/blob/main/images/wind_dist.png?raw=true)
 
 The radial bar plots and wind roses illustrate the distribution of wind speed, gusts, and directional variability for the three locations:
 
@@ -121,7 +149,7 @@ Gust magnitudes are notably higher in Sierra Leone, likely influenced by geograp
 Benin exhibits higher variability, especially in the Western and Southwestern directions, suggesting more dynamic and less predictable wind behavior. Togo’s variability is moderate, balancing between stable Northern winds and occasional shifts to the West and South.
 
 ### **Temperature Analysis**
-
+![rh](https://github.com/wendirad/solar-farm-insight/blob/main/images/rh_impact.png?raw=true)
 **Influence of Relative Humidity (RH)**: A negative correlation exists between `RH` and temperature readings (`TModA`, `TModB`) with correlation coefficients around -0.34 and -0.32, respectively. Higher humidity tends to slightly reduce recorded temperatures. Boxplots further confirm that lower `RH` categories correspond to higher temperatures, suggesting a cooling effect of humidity.
 
 **Impact on Solar Radiation** Solar radiation components (`GHI`, `DNI`, `DHI`) show moderate negative correlations with `RH` (-0.36 to -0.29). High `RH` reduces the intensity of solar irradiance, possibly due to increased cloud cover or atmospheric moisture.
@@ -139,6 +167,8 @@ Benin exhibits higher variability, especially in the Western and Southwestern di
 **Temperature (`TModA` and `TModB`)**: Both exhibit a near-normal distribution, centered around 30°C, with variations indicating slight differences in sensor calibration or localized effects.
 
 ### **Bubble charts**
+
+![bc](https://github.com/wendirad/solar-farm-insight/blob/main/images/bubble.png?raw=true)
 
 **GHI vs Tamb**: A positive relationship is observed; higher temperatures correlate with increased GHI levels.
 

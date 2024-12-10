@@ -40,7 +40,7 @@ st.markdown(
 
     ### 📊 Visualizations
 
-    *☀️🌡️ Temperature Analysis**: Investigate the impact of relative humidity
+    **🌡️ Temperature Analysis**: Investigate the impact of relative humidity
     on solar energy and temperature.
 
     **💾 Histograms**: Understand variable distributions for solar and
