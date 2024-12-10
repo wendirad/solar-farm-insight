@@ -17,7 +17,7 @@ def process_name(name) -> str:
     return name.replace(".csv", "").replace("_", " ").title()
 
 
-def load_data(files):
+def load_data(files) -> dict:
     """
     Load the data from the uploaded files
 
@@ -29,5 +29,7 @@ def load_data(files):
     names = {}
     for file in files:
         name = process_name(file.name)
-        names[name] = pd.read_csv(file)
+        names[name] = pd.read_csv(
+            file, parse_dates=["Timestamp"], index_col="Timestamp"
+        )
     return names

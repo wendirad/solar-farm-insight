@@ -1,17 +1,25 @@
-# 🌞 Solar Farm Dashboard
+<div align="center">
+    <h1>🌞 Solar Farm Insight</h1>
+    <img src="https://github.com/wendirad/solar-farm-insight/actions/workflows/pylint.yml/badge.svg" />
+    <img src="https://github.com/wendirad/solar-farm-insight/actions/workflows/unittests.yml/badge.svg" />
+    <img src="https://img.shields.io/badge/Dependabot-enabled-blue">
+    <br />
+<br />
+</div>
 
-A powerful and intuitive Streamlit application for analyzing solar farm data. This project provides comprehensive insights into solar energy, temperature, wind patterns, and more using interactive visualizations and advanced analytics.
+
+A project analyzes solar farm data from `Benin`, `Sierra Leone`, and `Togo` to identify trends in solar radiation, temperature, and wind conditions. It includes statistical calculations, data quality checks, and visualizations to evaluate operational factors such as cleaning efficiency. The objective is to provide actionable insights to improve solar energy performance and operational sustainability.
 
 ---
 
 ## 📂 Project Structure
 
-- **`app/`**: Core application logic, including the main dashboard and utilities.
+- **`.github/`**: GitHub workflows for CI/CD and issue templates.
+- **`app/`**: Core application logic, including the main streamlit dashboard and utilities.
 - **`data/`**: Sample datasets for analysis.
 - **`notebooks/`**: Jupyter notebooks for in-depth exploratory data analysis (EDA).
 - **`scripts/`**: Setup and additional scripts for data processing.
-- **`tests/`**: Unit tests to ensure reliability and correctness.
-- **`.github/`**: GitHub workflows for CI/CD and issue templates.
+- **`tests/`**: Unit tests for the application.
 
 ---
 
@@ -54,6 +62,10 @@ A powerful and intuitive Streamlit application for analyzing solar farm data. Th
 
 ## 🖥️ Running the App
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_red.svg)](https://solar-farm-insight.streamlit.app/)
+
+
+### Local
 1. Start the Streamlit app:
    ```bash
    streamlit run app/main.py
@@ -76,7 +88,7 @@ pytest
 
 ## 📜 License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [GNU GENERAL PUBLIC LICENSE v3](LICENSE).
 
 ---
 
