@@ -17,7 +17,7 @@ def process_name(name) -> str:
     return name.replace(".csv", "").replace("_", " ").title()
 
 
-def load_data(files):
+def load_data(files) -> dict:
     """
     Load the data from the uploaded files
 
